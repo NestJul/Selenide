@@ -1,6 +1,5 @@
 package ru.netology.web;
 
-import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
@@ -24,13 +23,17 @@ class CallbackTest {
         form.$("[data-test-id=date] input").sendKeys(Keys.DELETE);
         LocalDate date = LocalDate.now().plusDays(4);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-        form.$("[data-test-id=date] input").setValue(date.format(formatter));
+        String dateDelivery = date.format(formatter);
+        form.$("[data-test-id=date] input").setValue(dateDelivery);
 
         form.$("[data-test-id=name] input").setValue("Юлия Нестерова");
         form.$("[data-test-id=phone] input").setValue("+79270000000");
         form.$("[data-test-id=agreement]").click();
         form.$(By.className("button_theme_alfa-on-white")).click();
 
-        $(".notification__title").shouldBe(visible, Duration.ofSeconds(15)).shouldHave(text("Успешно!"));
+        $("[data-test-id=notification] .notification__content")
+                .shouldBe(visible, Duration.ofSeconds(15))
+                .shouldHave(text(dateDelivery));
+
     }
 }
